@@ -1,0 +1,13 @@
+[
+  {"product_id": "P-1001", "name": "云音降噪耳机", "description": "轻量头戴式蓝牙耳机，支持主动降噪和 40 小时续航。", "price_cents": 39900, "stock": 35, "attributes": {"color": ["曜石黑", "月光白"], "bluetooth": "5.3", "water_resistance": "未标注"}},
+  {"product_id": "P-1002", "name": "随行保温杯", "description": "500ml 不锈钢保温杯，适合日常通勤。", "price_cents": 12900, "stock": 80, "attributes": {"capacity_ml": 500, "material": "304 不锈钢"}},
+  {"product_id": "P-1003", "name": "净享空气循环扇", "description": "三档风速的桌面循环扇。", "price_cents": 26900, "stock": 19, "attributes": {"power_w": 35, "modes": 3}},
+  {"product_id": "P-1004", "name": "柔棉四件套", "description": "100% 棉质床品四件套。", "price_cents": 32900, "stock": 42, "attributes": {"size": ["1.5m", "1.8m"], "material": "100% 棉"}},
+  {"product_id": "P-1005", "name": "简约台灯", "description": "可调色温 LED 台灯。", "price_cents": 15900, "stock": 27, "attributes": {"color_temperature": "3000K-6000K", "power_w": 12}},
+  {"product_id": "P-1006", "name": "便携榨汁杯", "description": "USB-C 充电式 300ml 榨汁杯。", "price_cents": 18900, "stock": 23, "attributes": {"capacity_ml": 300, "charging": "USB-C"}},
+  {"product_id": "P-1007", "name": "蓝牙体脂秤", "description": "支持蓝牙同步的家用体脂秤。", "price_cents": 21900, "stock": 31, "attributes": {"max_weight_kg": 180, "connectivity": "Bluetooth"}},
+  {"product_id": "P-1008", "name": "竹纤维毛巾礼盒", "description": "四条装竹纤维毛巾礼盒。", "price_cents": 9900, "stock": 65, "attributes": {"quantity": 4, "material": "竹纤维混纺"}},
+  {"product_id": "P-1009", "name": "磁吸充电宝", "description": "10000mAh 磁吸移动电源。", "price_cents": 23900, "stock": 38, "attributes": {"capacity_mah": 10000, "input": "USB-C"}},
+  {"product_id": "P-1010", "name": "香氛扩香器", "description": "超声波冷雾扩香器，含两档雾量。", "price_cents": 14900, "stock": 17, "attributes": {"capacity_ml": 200, "modes": 2}}
+]
+

@@ -1,0 +1,4 @@
+[
+  {"scenario_id": "unknown_order", "description": "请求 PH-2026-999 时订单工具返回 not_found。", "trigger": "PH-2026-999"}
+]
+

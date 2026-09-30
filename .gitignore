@@ -1,0 +1,41 @@
+.env
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+data/*.db
+data/*.db-shm
+data/*.db-wal
+streamlit.log
+
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Environment variables and credentials
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
+
+# Runtime data
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+*.log
+
+# Local files
+.DS_Store
+.idea/
+.vscode/
+
+# Temporary files
+tmp/
+temp/

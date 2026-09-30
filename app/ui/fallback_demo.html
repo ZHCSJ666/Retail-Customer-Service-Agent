@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>零售客户服务中心</title>
+    <style>
+      :root { color-scheme: light; font-family: Inter, "PingFang SC", "Microsoft YaHei", sans-serif; background: #f2f6fb; color: #1d2330; }
+      * { box-sizing: border-box; }
+      body { margin: 0; }
+      header { background: radial-gradient(circle at 85% 0%, #4bb6cc 0, transparent 31%), linear-gradient(120deg, #0d3157, #176aa3); color: #fff; padding: 31px max(24px, calc((100vw - 1200px) / 2)); }
+      header h1 { margin: 0 0 6px; font-size: 28px; }
+      header p { margin: 0; opacity: .86; }
+      main { max-width: 1200px; margin: 24px auto; padding: 0 20px; display: grid; grid-template-columns: 290px minmax(0, 1fr) 320px; gap: 18px; }
+      section, aside { background: #fff; border: 1px solid #e4e9f1; border-radius: 12px; box-shadow: 0 2px 9px rgba(25, 46, 76, .05); }
+      .controls, .inspection { padding: 18px; height: fit-content; }
+      h2, h3 { margin: 0 0 14px; font-size: 16px; }
+      label { display: block; font-size: 13px; font-weight: 650; margin: 15px 0 6px; }
+      select, input, button { font: inherit; }
+      select, input { width: 100%; border: 1px solid #cbd5e1; border-radius: 7px; min-height: 38px; padding: 7px 9px; background: #fff; }
+      button { border: 0; border-radius: 7px; min-height: 36px; padding: 7px 10px; background: #1769aa; color: #fff; cursor: pointer; }
+      button:hover { background: #0e568f; }
+      button.secondary { background: #eaf1f8; color: #174d79; }
+      button.secondary:hover { background: #dceaf6; }
+      .button-grid { display: grid; gap: 8px; margin-top: 16px; }
+      .connection { border-radius: 7px; padding: 10px; font-size: 13px; background: #eef8f1; color: #156437; }
+      .connection.error { background: #fff0f0; color: #a52424; }
+      .tiny { font-size: 12px; color: #697386; line-height: 1.5; }
+      .chat { display: flex; flex-direction: column; min-height: 600px; overflow: hidden; }
+      .chat h2 { padding: 18px 18px 0; }
+      #messages { padding: 10px 18px 18px; flex: 1; display: flex; flex-direction: column; gap: 12px; overflow: auto; }
+      .message { max-width: 88%; padding: 11px 13px; border-radius: 10px; line-height: 1.55; white-space: pre-wrap; word-break: break-word; }
+      .message.user { align-self: flex-end; background: #1769aa; color: #fff; border-bottom-right-radius: 2px; }
+      .message.assistant { align-self: flex-start; background: #f0f4f8; border-bottom-left-radius: 2px; }
+      .message.system { align-self: center; max-width: 100%; color: #576579; font-size: 13px; background: #fbfcfd; border: 1px dashed #d5dce5; }
+      .compose { display: flex; gap: 8px; padding: 14px 18px 18px; border-top: 1px solid #e8edf2; }
+      .compose input { min-width: 0; }
+      .compose button { flex: 0 0 auto; }
+      details { border-top: 1px solid #e6ebf0; padding: 12px 0; }
+      details:first-of-type { border-top: 0; padding-top: 0; }
+      summary { cursor: pointer; color: #24445f; font-weight: 650; font-size: 13px; }
+      pre { margin: 9px 0 0; border-radius: 7px; padding: 10px; overflow: auto; white-space: pre-wrap; word-break: break-word; background: #f5f7fa; color: #354256; font: 12px/1.45 ui-monospace, SFMono-Regular, Menlo, monospace; }
+      .hidden { display: none; }
+      .operations { max-width: 1200px; margin: 0 auto 36px; padding: 0 20px; }
+      .operations-card { background: #fff; border: 1px solid #dce6f0; border-radius: 14px; padding: 20px; box-shadow: 0 10px 28px rgba(25, 60, 95, .07); }
+      .ops-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 15px; }
+      .ops-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+      .ops-panel { border: 1px solid #e1e9f1; border-radius: 10px; padding: 13px; background: #fbfdff; }
+      .ops-panel h3 { color: #174d79; margin-bottom: 9px; }
+      .ops-panel pre { max-height: 180px; font-size: 11px; }
+      .chip { display: inline-block; background: #e9f5f7; color: #176075; border-radius: 999px; font-size: 11px; font-weight: 650; padding: 3px 7px; margin: 0 5px 5px 0; }
+      @media (max-width: 1040px) { .ops-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+      @media (max-width: 920px) { main { grid-template-columns: 1fr; } .chat { min-height: 430px; } }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>🛍️ 零售客户服务中心</h1>
+    </header>
+    <main>
+      <aside class="controls">
+        <h2>服务工作台</h2>
+        <div id="connection" class="connection">正在连接 API…</div>
+        <label for="merchant">服务品牌</label>
+        <select id="merchant" disabled></select>
+        <label for="customer">客户</label>
+        <select id="customer" disabled></select>
+        <label for="order">关联订单</label>
+        <select id="order" disabled></select>
+        <div class="button-grid">
+          <button id="new-session" class="secondary" type="button">新建咨询</button>
+          <button id="run-script" type="button">▶ 一键完整剧本</button>
+          <button class="prompt secondary" data-message="这款耳机防水吗？买了多久能退？" type="button">商品＋退货政策</button>
+          <button class="prompt secondary" data-message="我的订单到哪了？" type="button">订单查询</button>
+          <button class="prompt secondary" data-message="这笔订单没发货，能退款吗？" type="button">退款资格</button>
+          <button class="prompt secondary" data-message="我要人工客服" type="button">转人工</button>
+          <button class="prompt secondary" data-message="SS-2026-99999" type="button">异常订单查询</button>
+        </div>
+      </aside>
+
+      <section class="chat">
+        <h2>客服对话</h2>
+        <div id="messages" aria-live="polite"></div>
+        <form id="composer" class="compose">
+          <input id="message" maxlength="4000" autocomplete="off" placeholder="例如：我的订单到哪了？" required />
+          <button id="send" type="submit">发送</button>
+        </form>
+      </section>
+
+      <aside class="inspection">
+        <h2>服务处理详情</h2>
+        <details open><summary>意图与参数</summary><pre id="intents">尚未发送消息。</pre></details>
+        <details><summary>Skill 与执行 trace</summary><pre id="trace">尚未发送消息。</pre></details>
+        <details><summary>知识来源</summary><pre id="sources">尚未发送消息。</pre></details>
+        <details><summary>规则、错误与人工工单</summary><pre id="result">尚未发送消息。</pre></details>
+      </aside>
+    </main>
+    <section class="operations">
+      <div class="operations-card">
+        <div class="ops-head"><div><h2>运营看板</h2></div><button id="refresh-ops" class="secondary" type="button">刷新运行状态</button></div>
+        <div class="ops-grid">
+          <div class="ops-panel"><h3>品牌能力</h3><div id="merchant-compare">加载中…</div></div>
+          <div class="ops-panel"><h3>运行指标</h3><pre id="metrics">尚未加载。</pre></div>
+          <div class="ops-panel"><h3>事件与 Webhook</h3><pre id="events">尚未加载。</pre></div>
+          <div class="ops-panel"><h3>配置版本与审计</h3><pre id="audit">尚未加载。</pre></div>
+        </div>
+      </div>
+    </section>
+    <script>
+      (() => {
+        const state = { merchantId: null, customerId: null, sessionId: null };
+        const el = {
+          connection: document.querySelector('#connection'), merchant: document.querySelector('#merchant'),
+          customer: document.querySelector('#customer'), order: document.querySelector('#order'),
+          messages: document.querySelector('#messages'), composer: document.querySelector('#composer'),
+          message: document.querySelector('#message'), send: document.querySelector('#send'),
+          newSession: document.querySelector('#new-session'), intents: document.querySelector('#intents'),
+          trace: document.querySelector('#trace'), sources: document.querySelector('#sources'), result: document.querySelector('#result'),
+          runScript: document.querySelector('#run-script'), refreshOps: document.querySelector('#refresh-ops'),
+          compare: document.querySelector('#merchant-compare'), metrics: document.querySelector('#metrics'), events: document.querySelector('#events'), audit: document.querySelector('#audit'),
+        };
+
+        async function api(path, options = {}) {
+          const response = await fetch(path, { ...options, headers: { 'Content-Type': 'application/json', ...(options.headers || {}) } });
+          const payload = await response.json().catch(() => ({}));
+          if (!response.ok) throw new Error(payload?.detail?.message || payload?.detail || `API 返回 ${response.status}`);
+          return payload;
+        }
+        function options(select, items, value, label) {
+          select.replaceChildren(...items.map(item => {
+            const node = document.createElement('option'); node.value = value(item); node.textContent = label(item); return node;
+          }));
+          select.disabled = false;
+        }
+        function setConnection(text, error = false) {
+          el.connection.textContent = text; el.connection.classList.toggle('error', error);
+        }
+        function addMessage(role, text) {
+          const node = document.createElement('div'); node.className = `message ${role}`; node.textContent = text; el.messages.append(node); el.messages.scrollTop = el.messages.scrollHeight;
+        }
+        function resetObservation() {
+          [el.intents, el.trace, el.sources, el.result].forEach(node => { node.textContent = '尚未发送消息。'; });
+        }
+        async function createSession() {
+          if (!state.merchantId || !state.customerId) return;
+          const session = await api('/sessions', { method: 'POST', body: JSON.stringify({ merchant_id: state.merchantId, customer_id: state.customerId }) });
+          state.sessionId = session.session_id; el.messages.replaceChildren(); resetObservation();
+          addMessage('system', `已建立服务会话：${session.session_id.slice(0, 8)}…`);
+        }
+        async function loadOrders() {
+          const orders = await api(`/demo/orders?merchant_id=${encodeURIComponent(state.merchantId)}&customer_id=${encodeURIComponent(state.customerId)}`);
+          options(el.order, [{ order_id: '', status: '不预选订单' }, ...orders], item => item.order_id, item => item.order_id ? `${item.order_id} · ${item.status} · ${item.shipping_status || '无物流'}` : item.status);
+        }
+        async function loadCustomers() {
+          const customers = await api(`/demo/customers?merchant_id=${encodeURIComponent(state.merchantId)}`);
+          options(el.customer, customers, item => item.customer_id, item => `${item.display_name}（${item.customer_id}）`);
+          state.customerId = el.customer.value;
+          await loadOrders(); await createSession();
+        }
+        async function initialize() {
+          try {
+            const health = await api('/health');
+            setConnection(`API 已连接 · ${health.llm_mode === 'mock' ? 'Mock 模型' : 'OpenAI-compatible'} · SQLite ${health.database_ready ? '正常' : '不可用'}`);
+            const merchants = await api('/demo/merchants');
+            options(el.merchant, merchants, item => item.merchant_id, item => item.display_name);
+            state.merchantId = el.merchant.value;
+            await loadCustomers(); await refreshOperations();
+          } catch (error) { setConnection(`无法连接 API：${error.message}`, true); addMessage('system', '页面初始化失败，请确认 FastAPI 服务正在运行。'); }
+        }
+        async function sendMessage(message) {
+          const clean = message.trim(); if (!clean || !state.sessionId) return;
+          addMessage('user', clean); el.message.value = ''; el.send.disabled = true;
+          try {
+            const response = await api('/chat', { method: 'POST', body: JSON.stringify({ session_id: state.sessionId, message: clean }) });
+            addMessage('assistant', response.answer);
+            el.intents.textContent = JSON.stringify(response.intents, null, 2);
+            el.trace.textContent = JSON.stringify({ status: response.status, used_skills: response.used_skills, trace: response.trace }, null, 2);
+            el.sources.textContent = JSON.stringify(response.sources, null, 2);
+            el.result.textContent = JSON.stringify({ error: response.error, handoff: response.handoff }, null, 2);
+          } catch (error) { addMessage('system', `请求失败：${error.message}`); }
+          finally { el.send.disabled = false; el.message.focus(); }
+        }
+        async function refreshOperations() {
+          try {
+            const [capabilities, metrics, events, audit, revisions] = await Promise.all([
+              api('/v1/merchants'), api(`/v1/observability/metrics?merchant_id=${encodeURIComponent(state.merchantId)}`),
+              api(`/v1/events?merchant_id=${encodeURIComponent(state.merchantId)}`), api(`/v1/observability/audit?merchant_id=${encodeURIComponent(state.merchantId)}&limit=6`),
+              api(`/v1/config/revisions?merchant_id=${encodeURIComponent(state.merchantId)}`),
+            ]);
+            el.compare.replaceChildren(...capabilities.map(item => { const node = document.createElement('span'); node.className = 'chip'; node.textContent = `${item.display_name} · ${item.order_id_pattern}`; return node; }));
+            el.metrics.textContent = JSON.stringify(metrics, null, 2);
+            el.events.textContent = JSON.stringify(events.slice(0, 4).map(item => ({ type: item.event_type, status: item.delivery_status, attempts: item.delivery_attempts })), null, 2);
+            el.audit.textContent = JSON.stringify({ revisions: revisions.map(item => ({ version: item.version, status: item.status })), audit: audit.map(item => ({ action: item.action, outcome: item.outcome })) }, null, 2);
+          } catch (error) { el.metrics.textContent = `运营数据暂不可用：${error.message}`; }
+        }
+        async function runScript() {
+          el.runScript.disabled = true; await createSession();
+          const script = state.merchantId === 'paper_harbor' ? ['这支笔防水吗？', '我的订单到哪了？', 'PH-2026-001', '我要人工客服'] : ['这款耳机防水吗？买了多久能退？', '我的订单到哪了？', 'SS-2026-10002', '这笔订单没发货，能退款吗？', 'SS-2026-10001', '我要人工客服'];
+          for (const message of script) await sendMessage(message);
+          await refreshOperations(); el.runScript.disabled = false;
+        }
+        el.merchant.addEventListener('change', async () => { state.merchantId = el.merchant.value; try { await loadCustomers(); await refreshOperations(); } catch (error) { setConnection(`切换商家失败：${error.message}`, true); } });
+        el.customer.addEventListener('change', async () => { state.customerId = el.customer.value; try { await loadOrders(); await createSession(); } catch (error) { setConnection(`切换客户失败：${error.message}`, true); } });
+        el.newSession.addEventListener('click', () => createSession().catch(error => setConnection(`新建会话失败：${error.message}`, true)));
+        el.runScript.addEventListener('click', runScript);
+        el.refreshOps.addEventListener('click', refreshOperations);
+        el.composer.addEventListener('submit', event => { event.preventDefault(); sendMessage(el.message.value); });
+        document.querySelectorAll('.prompt').forEach(button => button.addEventListener('click', () => sendMessage(button.dataset.message)));
+        initialize();
+      })();
+    </script>
+  </body>
+</html>

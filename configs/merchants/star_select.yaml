@@ -1,0 +1,40 @@
+merchant_id: star_select
+display_name: 星选生活（Star Select）
+demo_disclaimer: 所有商品、客户、订单、物流与工单均为模拟数据，不连接真实业务系统。
+order_id_pattern: 'SS-\d{4}-\d{5}'
+knowledge_dir: demo_data/star_select/knowledge
+prompt_path: configs/prompts/star_select_system.md
+enabled_skills:
+  - knowledge_qa
+  - order_lookup
+  - refund_eligibility
+  - human_handoff
+agent:
+  max_tool_steps: 4
+  max_history_messages: 8
+tool_adapters:
+  product: mock
+  order: mock
+  shipping: mock
+  handoff: mock
+mock_data:
+  products: demo_data/star_select/products.json
+  customers: demo_data/star_select/customers.json
+  orders: demo_data/star_select/orders.json
+  failure_scenarios: demo_data/star_select/failure_scenarios.json
+refund_rules:
+  version: star-select-2026-01
+  unshipped_order_eligible: true
+  delivered_return_window_days: 7
+  cancelled_order_eligible: false
+demo_requirements:
+  min_products: 10
+  min_customers: 3
+  min_orders: 12
+  min_knowledge_documents: 5
+  min_failure_scenarios: 5
+  required_order_statuses:
+    - pending_shipment
+    - in_transit
+    - delivered
+    - cancelled

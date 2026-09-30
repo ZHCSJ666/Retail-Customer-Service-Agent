@@ -1,0 +1,6 @@
+[
+  {"customer_id": "CUS-1001", "display_name": "林晓", "email": "lin.xiao@example.test"},
+  {"customer_id": "CUS-1002", "display_name": "陈默", "email": "chen.mo@example.test"},
+  {"customer_id": "CUS-1003", "display_name": "周宁", "email": "zhou.ning@example.test"}
+]
+

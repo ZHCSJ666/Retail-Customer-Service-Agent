@@ -1,0 +1,39 @@
+merchant_id: paper_harbor
+display_name: 纸舟文具（Paper Harbor）
+demo_disclaimer: 所有商品、客户、订单、物流与工单均为纸舟文具的模拟数据，不连接真实业务系统。
+order_id_pattern: 'PH-\d{4}-\d{3}'
+knowledge_dir: demo_data/paper_harbor/knowledge
+prompt_path: configs/prompts/paper_harbor_system.md
+enabled_skills:
+  - knowledge_qa
+  - order_lookup
+  - refund_eligibility
+  - human_handoff
+agent:
+  max_tool_steps: 4
+  max_history_messages: 6
+tool_adapters:
+  product: fixture_mock
+  order: fixture_mock
+  shipping: fixture_mock
+  handoff: fixture_mock
+mock_data:
+  products: demo_data/paper_harbor/products.json
+  customers: demo_data/paper_harbor/customers.json
+  orders: demo_data/paper_harbor/orders.json
+  failure_scenarios: demo_data/paper_harbor/failure_scenarios.json
+refund_rules:
+  version: paper-harbor-2026-02
+  unshipped_order_eligible: true
+  delivered_return_window_days: 14
+  cancelled_order_eligible: false
+demo_requirements:
+  min_products: 2
+  min_customers: 1
+  min_orders: 2
+  min_knowledge_documents: 2
+  min_failure_scenarios: 1
+  required_order_statuses:
+    - pending_shipment
+    - delivered
+

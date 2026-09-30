@@ -1,0 +1,5 @@
+[
+  {"product_id": "PH-P-01", "name": "速写中性笔", "description": "0.5mm 黑色中性笔，适合日常书写。", "price_cents": 690, "stock": 120, "attributes": {"tip_mm": 0.5, "ink_color": "黑色", "water_resistance": "不防水"}},
+  {"product_id": "PH-P-02", "name": "云页点阵笔记本", "description": "A5 点阵内页笔记本，160 页。", "price_cents": 2590, "stock": 48, "attributes": {"size": "A5", "pages": 160, "binding": "锁线"}}
+]
+

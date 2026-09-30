@@ -1,0 +1,7 @@
+[
+  {"scenario_id": "unknown_order", "description": "请求不存在的订单号时，订单工具必须返回 not_found。", "trigger": "SS-2026-99999"},
+  {"scenario_id": "cross_customer_order", "description": "会话客户查询其他客户订单时，工具必须拒绝且不泄露订单详情。", "trigger": "customer/order ownership mismatch"},
+  {"scenario_id": "unknown_shipping", "description": "订单 SS-2026-10010 的物流状态未知，不能推断预计送达时间。", "trigger": "SS-2026-10010"},
+  {"scenario_id": "tool_timeout", "description": "后续 Mock 适配器可用 timeout 测试开关模拟超时。", "trigger": "mock adapter timeout flag"},
+  {"scenario_id": "tool_error", "description": "后续 Mock 适配器可用 error 测试开关模拟业务工具异常。", "trigger": "mock adapter error flag"}
+]
